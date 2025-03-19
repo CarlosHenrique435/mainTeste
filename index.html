@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta Especial</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #ff9900;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 360px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .carousel img {
+            width: 80%; /* Ajustei para as imagens ficarem menores */
+            height: auto;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 1s ease, opacity 1s ease;
+        }
+        .carousel img.active {
+            display: block;
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        .carousel img.next, .carousel img.prev {
+            display: block;
+            transform: scale(0.8);
+            opacity: 0.3;
+        }
+        h1 {
+            color: #000;
+            font-size: 20px;
+            margin: 10px 0;
+        }
+        p {
+            color: #333;
+            font-size: 16px;
+        }
+        .form-container {
+            margin-top: 15px;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        button {
+            background-color: #ff9900;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #e68a00;
+        }
+        /* Alerta customizado */
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #28a745;
+            color: #fff;
+            padding: 40px; /* Aumentei a altura do alerta */
+            border-radius: 10px;
+            display: none;
+            text-align: center;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s ease-out;
+        }
+        .custom-alert p{
+            color:white;
+        }
+        .custom-alert img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+        .bonus {
+            font-size: 40px;
+            color: #ffcc00;
+            font-weight: bold;
+            margin-top: 20px;
+            animation: pulseEffect 1s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -55%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+        @keyframes pulseEffect {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.3); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .carousel {
+                height: 250px;
+            }
+            .container {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 18px;
+            }
+            p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Oferta Especial</div>
+    <div class="container">
+        <div class="carousel">
+            <img src="imagem1.jpg" class="active" alt="Imagem 1">
+            <img src="imagem2.jpg" alt="Imagem 2">
+            <img src="imagem3.jpg" alt="Imagem 3">
+        </div>
+        <h1>Insira seu número para ativar a oferta!</h1>
+        <p>Promoção válida por tempo limitado.</p>
+        <div class="form-container">
+            <form id="offerForm">
+                <input type="number" id="phone" placeholder="Digite seu número" required>
+                <button type="submit">Resgatar Oferta</button>
+            </form>
+        </div>
+    </div>
+    <div id="customAlert" class="custom-alert">
+        <img src="checkmark.png" alt="Sucesso">
+        <p>Parabéns! Sua oferta foi resgatada com sucesso.</p>
+        <div class="bonus">+ R$40</div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const images = document.querySelectorAll(".carousel img");
+            const alertBox = document.getElementById("customAlert");
+            const bonusText = document.querySelector(".bonus");
+            let index = 0;
+            
+            function showNextImage() {
+                // Escolhe aleatoriamente uma imagem do carrossel
+                images.forEach(img => img.classList.remove("active"));
+                index = Math.floor(Math.random() * images.length); // Escolhe uma imagem aleatória
+                images[index].classList.add("active");
+                updateImageClasses();
+            }
+
+            function updateImageClasses() {
+                images.forEach((img, i) => {
+                    if (i === index) {
+                        img.classList.add("active");
+                    } else if (i === (index + 1) % images.length) {
+                        img.classList.add("next");
+                    } else if (i === (index + 2) % images.length) {
+                        img.classList.add("prev");
+                    } else {
+                        img.classList.remove("next", "prev");
+                    }
+                });
+            }
+
+            function showAlert() {
+                alertBox.style.display = "block";
+                bonusText.style.opacity = "1";
+                setTimeout(() => {
+                    alertBox.style.animation = "fadeOut 0.5s ease-out";
+                    setTimeout(() => {
+                        alertBox.style.display = "none";
+                        alertBox.style.animation = "fadeIn 0.5s ease-out";
+                        bonusText.style.opacity = "0";
+                    }, 500);
+                }, 2000);
+            }
+
+            document.getElementById("offerForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                showNextImage();
+                showAlert();
+            });
+
+            // Inicializa o carrossel
+            updateImageClasses();
+        });
+    </script>
+</body>
+</html>
